@@ -6,6 +6,8 @@ namespace: petclinic
 resources:
 - namespace.yaml
 - scc-cluster-role.yaml
+- pipeline-user-namespaces-sa.yaml
 - workspace-pvc.yaml
+- m2-cache-pvc.yaml
 - maven-task.yaml
 - pipeline.yaml

@@ -45,7 +45,7 @@ spec:
         - name: source
           workspace: git-source
       runAfter:
-        - generate-id
+        - clone
       params:
         - name: GOALS
           value:
