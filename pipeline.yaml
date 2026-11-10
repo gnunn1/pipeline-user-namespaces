@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: petclinic
+spec:
+  params:
+    - name: SOURCE_GIT_REVISION
+      type: string
+      default: master
+    - name: SOURCE_GIT_URL
+      type: string
+      default: https://github.com/gnunn-gitops/quarkus-petclinic
+  tasks:
+    - name: clone
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+      workspaces:
+        - name: output
+          workspace: git-source
+      params:
+        - name: URL
+          value: "$(params.SOURCE_GIT_URL)"
+        - name: REVISION
+          value: "$(params.SOURCE_GIT_REVISION)"
+        - name: DELETE_EXISTING
+          value: "true"
+    - name: compile
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: maven
+          - name: namespace
+            value: petclinic
+      workspaces:
+        - name: source
+          workspace: git-source
+      runAfter:
+        - generate-id
+      params:
+        - name: GOALS
+          value:
+            - "package"
+  workspaces:
+    - name: git-source
