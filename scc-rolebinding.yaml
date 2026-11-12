@@ -1,0 +1,15 @@
+# Grants the pipeline service account the use of the OpenShift provided
+# "nested-container" SCC. OpenShift auto-generates a cluster role for every
+# SCC (system:openshift:scc:<name>) so no custom SCC or cluster role is needed,
+# and the binding itself is namespace scoped.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pipeline-user-namespaces
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:nested-container
+subjects:
+  - kind: ServiceAccount
+    name: pipeline-user-namespace

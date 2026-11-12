@@ -27,6 +27,20 @@ spec:
   timeouts:
     pipeline: 1h0m0s
   workspaces:
+    # A volume claim template gives every run its own source volume, so runs do
+    # not contend over a single RWO PVC and no PVC needs to be created up front.
     - name: git-source
-      persistentVolumeClaim:
-        claimName: source
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi
+    # The local maven repository is scratch space for the run. Backing it with a
+    # PVC to cache dependencies across runs is possible, but Tekton's affinity
+    # assistant (coschedule=workspaces by default) rejects a TaskRun that binds
+    # more than one PVC, so that would mean either sharing a single PVC with the
+    # source workspace via subPaths or setting coschedule=pipelineruns.
+    - name: maven-repository
+      emptyDir: {}

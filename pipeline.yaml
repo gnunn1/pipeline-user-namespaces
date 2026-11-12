@@ -41,9 +41,12 @@ spec:
             value: maven
           - name: namespace
             value: petclinic
+            #value: openshift-pipelines
       workspaces:
         - name: source
           workspace: git-source
+        - name: maven-repository
+          workspace: maven-repository
       runAfter:
         - clone
       params:
@@ -52,3 +55,4 @@ spec:
             - "package"
   workspaces:
     - name: git-source
+    - name: maven-repository
