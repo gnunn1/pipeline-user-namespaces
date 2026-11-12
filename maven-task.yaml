@@ -99,7 +99,8 @@ spec:
           #
           # This works because OpenShift Pipelines adds the
           # "io.kubernetes.cri-o.Devices: /dev/fuse,/dev/net/tun" annotation to
-          # TaskRun pods, so pasta can set up the tap device and podman can use
+          # TaskRun pods, so pasta (i.e. rootless user-mode networking in podman) can 
+          # set up the tap device and podman can use
           # fuse-overlayfs rather than falling back to the much slower vfs
           # storage driver.
           cat > "${CONTAINERS_CONF_OVERRIDE}" <<'EOF'

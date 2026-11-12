@@ -27,8 +27,6 @@ spec:
   timeouts:
     pipeline: 1h0m0s
   workspaces:
-    # A volume claim template gives every run its own source volume, so runs do
-    # not contend over a single RWO PVC and no PVC needs to be created up front.
     - name: git-source
       volumeClaimTemplate:
         spec:
